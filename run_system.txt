@@ -1,0 +1,2 @@
+python src/main.py --file "Audios\rubber industry.wav" --lang hi-IN --speakers 2
+python src/main.py --file "Audios\rubber industry.wav" 
