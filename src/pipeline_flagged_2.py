@@ -15,8 +15,8 @@ class FlaggedPipeline:
         self.model = model or GEMINI_MODEL
         
         # Load prompt from file
-        # prompt_path = Path(__file__).resolve().parent / "prompt_1.txt"
-        prompt_path = Path(__file__).resolve().parent / "prompt.txt"
+        # prompt_path = Path(__file__).resolve().parent / "prompt_normal.txt"
+        prompt_path = Path(__file__).resolve().parent / "prompt_flag.txt"
         if prompt_path.exists():
             with open(prompt_path, "r", encoding="utf-8") as f:
                 self.system_prompt = f.read()

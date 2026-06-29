@@ -7,9 +7,10 @@ from pathlib import Path
 # Set up package paths so we can run directly
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-from src.config import AUDIO_DIR, is_api_configured, SARVAM_API_KEY, OUTPUT_DIR
+from src.config import AUDIO_DIR, is_api_configured, SARVAM_API_KEY, OUTPUT_DIR, OUTPUT_FLAGGED_DIR
 from src.pipeline_S2T_1 import TranscriptionPipeline
 from src.pipeline_flagged_2 import FlaggedPipeline
+from src.pipeline_intent_3 import IntentPipeline
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -117,6 +118,25 @@ def main():
         logger.info("Flagged keywords extraction finished.")
     except Exception as e:
         logger.error(f"Flagged keywords extraction failed: {e}", exc_info=True)
+
+
+    # 5. Execute the Intent Detection
+    logger.info("Starting Intent Detection using Gemini...")
+    try:
+        intent_pipeline = IntentPipeline()
+        for file_path in file_paths:
+            base_name = Path(file_path).stem
+            flagged_json_filename = f"flagged_{base_name}_processed.json"
+            flagged_json_path = OUTPUT_FLAGGED_DIR / flagged_json_filename
+            if flagged_json_path.exists():
+                output_path = intent_pipeline.process_file(flagged_json_path)
+                if output_path:
+                    logger.info(f"Generated intent detection JSON: {output_path.name}")
+            else:
+                logger.warning(f"Flagged JSON not found for {base_name}: {flagged_json_path}")
+        logger.info("Intent detection finished.")
+    except Exception as e:
+        logger.error(f"Intent detection failed: {e}", exc_info=True)
 
 if __name__ == "__main__":
     main()
