@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vayana Voice - Intent Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Vayana Voice Analysis</h1>
+            <p>Upload an audio file to generate transliterated transcripts, detect flagged keywords, and analyze intent.</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section class="upload-section glass-card" id="upload-section">
+                <div class="upload-zone" id="upload-zone">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <h3>Drag & Drop your audio file here</h3>
+                    <p>or click to browse</p>
+                    <input type="file" id="file-input" accept=".wav,.mp3,.aac,.flac,.ogg" hidden>
+                </div>
+                <div class="selected-file" id="selected-file" style="display: none;">
+                    <span id="file-name">filename.wav</span>
+                    <button class="btn btn-primary" id="upload-btn">Process Audio</button>
+                </div>
+            </section>
+
+            <!-- Loading Status -->
+            <section class="status-section glass-card" id="status-section" style="display: none;">
+                <div class="spinner"></div>
+                <h3 id="status-text">Processing Audio...</h3>
+                <p id="status-message">Starting S2T pipeline...</p>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="results-section" style="display: none;">
+                
+                <!-- Audio Player -->
+                <div class="audio-player-container glass-card">
+                    <h3>Uploaded Audio</h3>
+                    <audio id="audio-player" controls>
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Intent Table -->
+                    <div class="table-container glass-card">
+                        <h3>Intent & Risk Analysis</h3>
+                        <div class="table-responsive">
+                            <table id="intent-table">
+                                <thead>
+                                    <tr>
+                                        <th>Speaker</th>
+                                        <th>Flagged Keywords</th>
+                                        <th>Intent Detected</th>
+                                        <th>Risk %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Transcript View -->
+                    <div class="transcript-container glass-card">
+                        <h3>Transliterated Transcript</h3>
+                        <div class="transcript-content" id="transcript-content">
+                            <!-- Transcript populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
