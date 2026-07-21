@@ -3,88 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vayana Voice - Intent Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Vayana Voice - Premium Intent Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- Phosphor Icons for premium aesthetic -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- html2pdf for report generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="background-elements">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
     <div class="container">
         <header>
-            <h1>Vayana Voice Analysis</h1>
-            <p>Upload an audio file to generate transliterated transcripts, detect flagged keywords, and analyze intent.</p>
+            <div class="header-content">
+                <h1>Vayana Voice</h1>
+                <p>Advanced Real-time Transliteration & Intent Analysis</p>
+            </div>
+            <!-- Global Back to Home Button, hidden by default -->
+            <button id="back-home-btn" class="btn btn-icon" style="display: none;">
+                <i class="ph ph-house"></i> Back to Home
+            </button>
         </header>
 
         <main>
-            <!-- Upload Section -->
-            <section class="upload-section glass-card" id="upload-section">
-                <div class="upload-zone" id="upload-zone">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                    <h3>Drag & Drop your audio file here</h3>
-                    <p>or click to browse</p>
-                    <input type="file" id="file-input" accept=".wav,.mp3,.aac,.flac,.ogg" hidden>
-                </div>
-                <div class="selected-file" id="selected-file" style="display: none;">
-                    <span id="file-name">filename.wav</span>
-                    <button class="btn btn-primary" id="upload-btn">Process Audio</button>
-                </div>
-            </section>
-
-            <!-- Loading Status -->
-            <section class="status-section glass-card" id="status-section" style="display: none;">
-                <div class="spinner"></div>
-                <h3 id="status-text">Processing Audio...</h3>
-                <p id="status-message">Starting S2T pipeline...</p>
-            </section>
-
-            <!-- Results Section -->
-            <section class="results-section" id="results-section" style="display: none;">
-                
-                <!-- Audio Player -->
-                <div class="audio-player-container glass-card">
-                    <h3>Uploaded Audio</h3>
-                    <audio id="audio-player" controls>
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-
-                <div class="dashboard-grid">
-                    <!-- Intent Table -->
-                    <div class="table-container glass-card">
-                        <h3>Intent & Risk Analysis</h3>
-                        <div class="table-responsive">
-                            <table id="intent-table">
-                                <thead>
-                                    <tr>
-                                        <th>Speaker</th>
-                                        <th>Flagged Keywords</th>
-                                        <th>Intent Detected</th>
-                                        <th>Risk %</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Rows populated via JS -->
-                                </tbody>
-                            </table>
+            <!-- ===================== HOME VIEW ===================== -->
+            <section id="home-view" class="view-section active">
+                <div class="choice-cards">
+                    <div class="choice-card glass-card" id="card-upload">
+                        <div class="card-icon">
+                            <i class="ph ph-upload-simple"></i>
                         </div>
+                        <h2>Upload Audio</h2>
+                        <p>Analyze pre-recorded audio files. Get detailed transcripts, flagged keywords, and intent analysis.</p>
+                        <button class="btn btn-primary mt-4">Select Upload Mode</button>
                     </div>
 
-                    <!-- Transcript View -->
-                    <div class="transcript-container glass-card">
-                        <h3>Transliterated Transcript</h3>
-                        <div class="transcript-content" id="transcript-content">
-                            <!-- Transcript populated via JS -->
+                    <div class="choice-card glass-card" id="card-live">
+                        <div class="card-icon live-icon">
+                            <i class="ph ph-microphone-stage"></i>
+                            <span class="live-ping"></span>
                         </div>
+                        <h2>Live Processing</h2>
+                        <p>Connect your microphone and process an active conversation in real-time, block by block.</p>
+                        <button class="btn btn-primary mt-4">Select Live Mode</button>
                     </div>
                 </div>
             </section>
+
+            <!-- ===================== UPLOAD VIEW ===================== -->
+            <section id="upload-view" class="view-section" style="display: none;">
+                <!-- Upload Dropzone -->
+                <div class="upload-section glass-card" id="upload-section">
+                    <div class="upload-zone" id="upload-zone">
+                        <i class="ph ph-file-audio"></i>
+                        <h3>Drag & Drop your audio file here</h3>
+                        <p>or click to browse</p>
+                        <input type="file" id="file-input" accept=".wav,.mp3,.aac,.flac,.ogg" hidden>
+                    </div>
+                    <div class="selected-file" id="selected-file" style="display: none;">
+                        <div class="file-info">
+                            <i class="ph ph-music-notes"></i>
+                            <span id="file-name">filename.wav</span>
+                        </div>
+                        <button class="btn btn-accent" id="upload-btn">Process Audio <i class="ph ph-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Loading Status -->
+                <div class="status-section glass-card" id="status-section" style="display: none;">
+                    <div class="spinner"></div>
+                    <h3 id="status-text">Processing Audio...</h3>
+                    <p id="status-message">Starting S2T pipeline...</p>
+                </div>
+
+                <!-- Upload Results -->
+                <div class="results-section" id="upload-results" style="display: none;">
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                        <button class="btn btn-primary" id="btn-upload-report" style="background: var(--accent); border-color: var(--accent);">
+                            <i class="ph ph-file-pdf"></i> Generate Report
+                        </button>
+                    </div>
+                    <div class="dashboard-layout">
+                        <!-- Left Pane: Audio & Transcript -->
+                        <div class="left-pane">
+                            <div class="audio-player-container glass-card mb-4">
+                                <h3><i class="ph ph-speaker-hifi"></i> Source Audio</h3>
+                                <audio id="audio-player" controls></audio>
+                            </div>
+
+                            <div class="transcript-container glass-card">
+                                <h3><i class="ph ph-text-align-left"></i> Transliterated Transcript</h3>
+                                <div class="transcript-content" id="transcript-content">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Pane: Intent Table -->
+                        <div class="right-pane">
+                            <div class="table-container glass-card h-full">
+                                <h3><i class="ph ph-shield-warning"></i> Intent & Risk Analysis</h3>
+                                <div class="table-responsive">
+                                    <table id="intent-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Speaker</th>
+                                                <th>Keywords</th>
+                                                <th>Intent</th>
+                                                <th>Risk</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Populated via JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================== LIVE VIEW ===================== -->
+            <section id="live-view" class="view-section" style="display: none;">
+                <div class="live-controls glass-card text-center mb-4">
+                    <h3 class="mb-2">Live Audio Analysis</h3>
+                    <p class="text-secondary mb-4">Click below to start your real-time session. A new chunk is generated every 15 seconds.</p>
+                    
+                    <button class="btn btn-accent pulse-btn" id="start-live-btn">
+                        <i class="ph ph-microphone"></i> Start Live Call
+                    </button>
+                    
+                    <button class="btn btn-primary ml-2" id="btn-live-report" style="display: none; background: var(--success); border-color: var(--success);">
+                        <i class="ph ph-file-pdf"></i> Generate Report
+                    </button>
+                    
+                    <div id="live-status-container" style="display: none; margin-top: 1rem;">
+                        <div class="live-indicator">
+                            <span class="dot"></span>
+                            <span id="live-status-text">Connecting...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion Container for Live Chunks -->
+                <div class="live-chunks-container" id="live-chunks-container">
+                    <!-- Dynamic accordion items will be prepended here via JS -->
+                </div>
+            </section>
+
+            <!-- ===================== REPORT MODAL ===================== -->
+            <div id="report-modal" class="modal-backdrop" style="display: none;">
+                <div class="modal-content glass-card">
+                    <div class="modal-header">
+                        <h2>Session Report</h2>
+                        <div>
+                            <button class="btn btn-primary" id="btn-download-pdf"><i class="ph ph-download-simple"></i> Download PDF</button>
+                            <button class="btn btn-icon" id="btn-close-report"><i class="ph ph-x"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <!-- Wrapper for html2pdf generation -->
+                        <div id="report-document" class="report-document">
+                            <div class="report-header">
+                                <h1>Vayana Voice</h1>
+                                <h2>Consolidated Session Report</h2>
+                                <p id="report-date"></p>
+                            </div>
+
+                            <div class="report-summary-cards">
+                                <div class="report-card">
+                                    <i class="ph ph-users"></i>
+                                    <div class="rc-info">
+                                        <h4 id="rep-total-speakers">0</h4>
+                                        <span>Speakers</span>
+                                    </div>
+                                </div>
+                                <div class="report-card danger-card">
+                                    <i class="ph ph-warning-circle"></i>
+                                    <div class="rc-info">
+                                        <h4 id="rep-high-risk">0</h4>
+                                        <span>High Risk Alerts</span>
+                                    </div>
+                                </div>
+                                <div class="report-card success-card">
+                                    <i class="ph ph-check-circle"></i>
+                                    <div class="rc-info">
+                                        <h4 id="rep-low-risk">0</h4>
+                                        <span>Low Risk Segments</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="breakdown-title">Speaker Breakdown</h3>
+                            <div id="report-speaker-breakdown" class="report-speaker-breakdown">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script src="script.js"></script>
+    <script src="/live_scripts/live_script.js"></script>
 </body>
 </html>

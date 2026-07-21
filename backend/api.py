@@ -1,3 +1,4 @@
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI, UploadFile, File, BackgroundTasks, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -21,6 +22,10 @@ from src.pipeline_intent_3 import IntentPipeline
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# --- Below is Live Part code ---
+from Live_Processing.backend_live.live_api import live_router
+# --- Live part code ends ---
 
 app = FastAPI(title="Vayana Voice API")
 
@@ -125,4 +130,11 @@ async def get_audio(filename: str):
 # Serve static files for frontend
 frontend_dir = BASE_DIR / "frontend"
 frontend_dir.mkdir(parents=True, exist_ok=True)
+
+# --- Below is Live Part code ---
+# Also mount the live frontend files so we can serve live_script.js
+app.mount("/live_scripts", StaticFiles(directory=str(BASE_DIR / "Live_Processing" / "frontend_live")), name="live_scripts")
+app.include_router(live_router)
+# --- Live part code ends ---
+
 app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
